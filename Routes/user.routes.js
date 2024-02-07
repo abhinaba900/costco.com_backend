@@ -159,6 +159,7 @@ userRouter.post("/login", async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000,
       sameSite: "none",
       secure: true,
+      
     });
 
     res.cookie("refreshToken", refreshToken, {

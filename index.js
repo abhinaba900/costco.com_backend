@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 const userRouter = require("./Routes/user.routes");
 const authMiddleware = require("./Middleware/auth.middleware");
 const productRouter = require("./Routes/products.routes");
+const cartRouter = require("./Routes/Cart.routes");
 
 app.use(express.json());
 app.use(
@@ -19,6 +20,7 @@ app.use(cookieParser());
 
 app.use("/user", userRouter);
 app.use("/products", productRouter);
+app.use("/cart", cartRouter);
 
 app.get("/", authMiddleware, (req, res) => {
   try {
