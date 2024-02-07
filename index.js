@@ -11,7 +11,7 @@ const productRouter = require("./Routes/products.routes");
 app.use(express.json());
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: ["http://localhost:3000", "https://costco-com-i4c5.vercel.app"],
     credentials: true,
   })
 );
