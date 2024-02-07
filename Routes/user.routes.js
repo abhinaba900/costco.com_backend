@@ -229,8 +229,20 @@ userRouter.patch("/forgot/password", async (req, res) => {
 userRouter.get("/logout", (req, res) => {
   try {
     const { authToken, refreshToken } = req.cookies;
-    res.clearCookie( "authToken",authToken, { sameSite: "none", secure: true });
-    res.clearCookie( "refreshToken",refreshToken, { sameSite: "none", secure: true });
+    res.clearCookie("authToken", authToken, {
+      expires: new Date(0),
+      path: "/",
+      domain: "https://costco-com-i4c5.vercel.app",
+      secure: true,
+      sameSite: "none",
+    });
+    res.clearCookie("refreshToken", refreshToken, {
+      expires: new Date(0),
+      path: "/",
+      domain: "https://costco-com-i4c5.vercel.app",
+      secure: true,
+      sameSite: "none",
+    });
     res.status(200).json({ message: "Logout successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
