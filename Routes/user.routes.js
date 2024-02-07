@@ -228,7 +228,7 @@ userRouter.patch("/forgot/password", async (req, res) => {
 
 userRouter.get("/logout", (req, res) => {
   try {
-    const { authToken, refreshToken } = req.body;
+    const { authToken, refreshToken } = req.cookies;
     res.clearCookie(authToken, { sameSite: "none", secure: true });
     res.clearCookie(refreshToken, { sameSite: "none", secure: true });
     res.status(200).json({ message: "Logout successfully" });
