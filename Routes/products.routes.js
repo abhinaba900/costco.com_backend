@@ -4,7 +4,7 @@ const { Products } = require("../Models/user.models");
 
 // GET all products
 productRouter.get("/", async (req, res) => {
-  const { sort, search } = req.query;
+  const { sort='', search='' } = req.query;
   let query = {};
 
   // Constructing a search query if a search term is provided

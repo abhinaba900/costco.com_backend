@@ -15,6 +15,20 @@ app.use(
     credentials: true,
   })
 );
+app.use(
+  session({
+    name: "session",
+    keys: ["key1", "key2"],
+    cookie: {
+      secure: true,
+      httpOnly: true,
+      domain: "example.com",
+      path: "/",
+      expires: new Date(Date.now() + 60 * 60 * 1000), // 1 hour
+      sameSite: "none", // Important for third-party cookies
+    },
+  })
+);
 app.use(cookieParser());
 
 app.use("/user", userRouter);
