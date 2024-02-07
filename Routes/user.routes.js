@@ -1,6 +1,6 @@
 const express = require("express");
 const userRouter = express.Router();
-const {User} = require("../Models/user.models");
+const { User } = require("../Models/user.models");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
@@ -21,7 +21,7 @@ let users = {};
 // Registration route
 userRouter.post("/register-email", (req, res) => {
   const { email } = req.body;
-  
+
   const userId = uuid.v4();
   const verificationToken = Math.floor(100000 + Math.random() * 900000); // Generate unique verification token
 
@@ -159,7 +159,6 @@ userRouter.post("/login", async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000,
       sameSite: "none",
       secure: true,
-      
     });
 
     res.cookie("refreshToken", refreshToken, {
@@ -229,8 +228,9 @@ userRouter.patch("/forgot/password", async (req, res) => {
 
 userRouter.get("/logout", (req, res) => {
   try {
-    res.clearCookie("authToken");
-    res.clearCookie("refreshToken");
+    const { authToken, refreshToken } = req.body;
+    res.clearCookie(authToken, { sameSite: "none", secure: true });
+    res.clearCookie(refreshToken, { sameSite: "none", secure: true });
     res.status(200).json({ message: "Logout successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
