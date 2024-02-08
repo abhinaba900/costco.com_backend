@@ -35,7 +35,7 @@ userRouter.post("/register-email", (req, res) => {
     from: "subhamsana700@gmail.com",
     to: email,
     subject: "Verify your email",
-    text: `Please click on the following link to verify your email: go to official website. your varification token is:-"${verificationToken}" and your user id is:-"${userId}" and your varification link is "${verificationLink}"`,
+    text: `Please click on the following link to verify your email: go to official website. your varification token is:-"${verificationToken}" and your user id is:-"${userId}"`,
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
