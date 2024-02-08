@@ -26,6 +26,15 @@ cartRouter.post("/:id", async (req, res) => {
   }
 });
 
+cartRouter.get("/", async (req, res) => {
+  try {
+    const cart = await Cart.find();
+    res.status(200).send(cart);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+})
+
 cartRouter.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
