@@ -20,6 +20,10 @@ const userSchema = new mongoose.Schema({
 });
 const productSchema = new mongoose.Schema({
   default: String,
+  quantity: {
+    type: Number,
+    default: 0,
+  },
 });
 
 const cartSchema = new mongoose.Schema(
