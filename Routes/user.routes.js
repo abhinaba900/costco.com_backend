@@ -78,7 +78,7 @@ userRouter.post("/verify-email", async (req, res) => {
 
     // Mark the user as verified
     user.verified = true;
-    res.send("Email successfully verified.");
+    res.status(200).send("Email successfully verified.");
   } catch (error) {
     console.log(error);
     res.status(500).send(error.message);
