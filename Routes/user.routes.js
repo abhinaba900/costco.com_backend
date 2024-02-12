@@ -232,7 +232,7 @@ userRouter.patch("/forgot/password", async (req, res) => {
     })
   ) {
     // 422 Unprocessable Entity for weak password, though 400 could also be argued for consistency
-    return res.status(422).json({
+    return res.status(402).json({
       message:
         "Password must be stronger. It should contain at least 8 characters, including an uppercase letter, a lowercase letter, a number, and a symbol.",
     });
