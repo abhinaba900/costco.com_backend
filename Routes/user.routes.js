@@ -108,7 +108,12 @@ userRouter.post("/register", async (req, res) => {
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ name, email, password: hashedPassword });
+    const user = new User({
+      name,
+      email,
+      password: hashedPassword,
+      userId: uuid.v4(),
+    });
     await user.save();
     // 201 Created is appropriate for successful resource creation
     res.status(201).json({ message: "User created successfully" });
@@ -152,17 +157,17 @@ userRouter.post("/login", async (req, res) => {
     const refreshToken = jwt.sign(
       { userId: findEmail._id },
       process.env.REFRESH_key, // Ensure your environment variables are consistently named
-      { expiresIn: "7d" }
+      { expiresIn: "1d" }
     );
 
     res.cookie("authToken", authToken, {
-      maxAge: 24 * 60 * 60 * 1000,
+      maxAge: 60 * 60 * 1000,
       sameSite: "none",
       secure: true,
     });
 
     res.cookie("refreshToken", refreshToken, {
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: 24 * 60 * 60 * 1000,
       sameSite: "none",
       secure: true,
     });
@@ -170,7 +175,12 @@ userRouter.post("/login", async (req, res) => {
     // 200 OK or 202 Accepted is more appropriate for a successful operation
     res
       .status(200)
-      .json({ message: "Login successfully", authToken, refreshToken });
+      .json({
+        message: "Login successfully",
+        authToken,
+        refreshToken,
+        userId: findEmail._id,
+      });
   } catch (error) {
     // 500 Internal Server Error is appropriate for server errors
     res.status(500).json({ message: error.message });

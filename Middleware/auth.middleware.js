@@ -16,10 +16,12 @@ async function authMiddleware(req, res, next) {
       jwt.verify(authToken, process.env.AUTH_key, (err, data) => {
         if (data) {
           // If authToken is not valid, check refreshToken
+          req.body.userId = data.userId;
           next();
         } else {
           jwt.verify(refreshToken, process.env.REFRESH_key, (err, data) => {
             if (data) {
+              req.body.userId = data.userId;
               next();
             } else {
               res.status(403).send("Not authorized. Please login again.");
