@@ -4,28 +4,20 @@ const { Products } = require("../Models/user.models");
 
 // GET all products
 productRouter.get("/", async (req, res) => {
-  const { sort='', search='' } = req.query;
+  const { search = "" } = req.query;
   let query = {};
 
   // Constructing a search query if a search term is provided
-  if (search) {
-    query.$or = [
-      { name: { $regex: search, $options: "i" } }, // Searches in 'name'
-      // Add other fields you want to include in the search, for example:
-      // { description: { $regex: search, $options: 'i' } }
-    ];
+  if (search != undefined) {
+    query = { name: { $regex: search, $options: "i" } };
+  } else {
+    query = {};
   }
 
   try {
     let productsQuery = Products.find(query);
 
-    // Sorting
-    if (sort) {
-      productsQuery = productsQuery.sort(sort); // Directly use the sort query param
-    }
-
-    const products = await productsQuery;
-    res.status(200).send(products);
+    res.status(200).send(productsQuery);
   } catch (error) {
     res.status(500).send({
       message: "Error retrieving products",
