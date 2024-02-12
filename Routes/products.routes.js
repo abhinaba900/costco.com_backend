@@ -8,16 +8,14 @@ productRouter.get("/", async (req, res) => {
   let query = {};
 
   // Constructing a search query if a search term is provided
-  if (search != undefined) {
+  if (search) {
     query = { name: { $regex: search, $options: "i" } };
-  } else {
-    query = {};
   }
 
   try {
-    let productsQuery = Products.find(query);
-
-    res.status(200).send(productsQuery);
+    // Execute the query to get the actual products
+    const products = await Products.find(query); // This line is modified to execute the query
+    res.status(200).send(products); // Send the actual products
   } catch (error) {
     res.status(500).send({
       message: "Error retrieving products",

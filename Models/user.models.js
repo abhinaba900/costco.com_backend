@@ -23,10 +23,23 @@ const userSchema = new mongoose.Schema({
   },
 });
 const productSchema = new mongoose.Schema({
-  default: String,
-  quantity: {
+  id: {
     type: Number,
-    default: 0,
+  },
+  category: {
+    type: String,
+  },
+  image: {
+    type: String,
+  },
+  name: {
+    type: String,
+  },
+  price: {
+    type: Number,
+  },
+  shipping: {
+    type: String,
   },
 });
 
