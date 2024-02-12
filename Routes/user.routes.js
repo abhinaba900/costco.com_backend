@@ -19,49 +19,59 @@ const transporter = nodemailer.createTransport({
 let users = {};
 
 // Registration route
-userRouter.post("/register-email", (req, res) => {
-  const { email } = req.body;
+userRouter.post("/register-email", async (req, res) => {
+  try {
+    const { email } = req.body;
 
-  const userId = uuid.v4();
-  const verificationToken = Math.floor(100000 + Math.random() * 900000); // Generate unique verification token
+    const userId = uuid.v4();
+    const verificationToken = Math.floor(100000 + Math.random() * 900000); // Generate unique verification token
 
-  // Store user with verification token and not verified status
-  users[userId] = { email, verificationToken, verified: false };
+    // Store user with verification token and not verified status
+    users[userId] = { email, verificationToken, verified: false };
 
-  // Email verification link
-  const verificationLink = `${req.url}/user/verify-email?token=${verificationToken}&userId=${userId}`;
+    // Email verification link
+    const verificationLink = `${req.url}/user/verify-email?token=${verificationToken}&userId=${userId}`;
 
-  const mailOptions = {
-    from: "subhamsana700@gmail.com",
-    to: email,
-    subject: "Verify your email",
-    text: `Please click on the following link to verify your email: go to official website. your varification token is:-"${verificationToken}" and your user id is:-"${userId}"`,
-  };
+    const mailOptions = {
+      from: "subhamsana700@gmail.com",
+      to: email,
+      subject: "Verify your email",
+      text: `Please click on the following link to verify your email: go to official website. your varification token is:-"${verificationToken}" and your user id is:-"${userId}"`,
+    };
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log(error);
-      res.status(500).send("Error sending verification email");
-    } else {
-      console.log("Verification email sent: " + info.response);
-      res
-        .status(200)
-        .send("Registration successful, please verify your email.");
-    }
-  });
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log(error);
+        res.status(500).send("Error sending verification email");
+      } else {
+        console.log("Verification email sent: " + info.response);
+        res
+          .status(200)
+          .send("Registration successful, please verify your email.");
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error.message);
+  }
 });
 
 // Verification route
-userRouter.post("/verify-email", (req, res) => {
-  const { token, userId } = req.body;
+userRouter.post("/verify-email", async (req, res) => {
+  try {
+    const { token, userId } = req.body;
 
-  const user = users[userId];
+    const user = users[userId];
 
-  if (user && user.verificationToken === token) {
-    user.verified = true; // Mark the user as verified
-    res.send("Email successfully verified.");
-  } else {
-    res.status(400).send("Invalid or expired verification link.");
+    if (user && user.verificationToken === token) {
+      user.verified = true; // Mark the user as verified
+      res.send("Email successfully verified.");
+    } else {
+      res.status(400).send("Invalid or expired verification link.");
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error.message);
   }
 });
 userRouter.post("/register", async (req, res) => {
@@ -173,14 +183,12 @@ userRouter.post("/login", async (req, res) => {
     });
 
     // 200 OK or 202 Accepted is more appropriate for a successful operation
-    res
-      .status(200)
-      .json({
-        message: "Login successfully",
-        authToken,
-        refreshToken,
-        userId: findEmail._id,
-      });
+    res.status(200).json({
+      message: "Login successfully",
+      authToken,
+      refreshToken,
+      userId: findEmail._id,
+    });
   } catch (error) {
     // 500 Internal Server Error is appropriate for server errors
     res.status(500).json({ message: error.message });
