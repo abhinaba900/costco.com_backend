@@ -67,6 +67,7 @@ userRouter.post("/verify-email", async (req, res) => {
     }
 
     const user = users[userId];
+    console.log(users);
 
     // Check if user exists and token matches
     if (!user) {
