@@ -37,6 +37,9 @@ const cartSchema = new mongoose.Schema(
     },
     default: String,
     products: [],
+    userId: {
+      type: String,
+    },
   },
   {
     versionKey: false,
@@ -61,7 +64,7 @@ const forgotCodeSchema = new mongoose.Schema(
     verified: {
       type: Boolean,
       default: false,
-    }
+    },
   },
   {
     versionKey: false,

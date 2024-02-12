@@ -15,6 +15,7 @@ cartRouter.post("/:id", authMiddleware, async (req, res) => {
       const cart = new Cart({
         id: id,
         products: products,
+        userId
       });
       await cart.save();
       res.status(200).send(cart);
