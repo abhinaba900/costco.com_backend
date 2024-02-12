@@ -74,7 +74,7 @@ userRouter.post("/verify-email", async (req, res) => {
     // Check if user exists and token matches
     if (!user) {
       return res.status(404).send("User not found.");
-    } else if (Number(user.verificationToken) !== token) {
+    } else if (Number(user.verificationToken) !== Number(token)) {
       return res.status(400).send("Invalid or expired verification link.");
     }
 
