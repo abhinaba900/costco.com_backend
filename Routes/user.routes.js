@@ -61,14 +61,23 @@ userRouter.post("/verify-email", async (req, res) => {
   try {
     const { token, userId } = req.body;
 
+    // Validate input
+    if (!userId || !token) {
+      return res.status(400).send("Missing token or user ID.");
+    }
+
     const user = users[userId];
 
-    if (user && user.verificationToken === token) {
-      user.verified = true; // Mark the user as verified
-      res.send("Email successfully verified.");
-    } else {
-      res.status(400).send("Invalid or expired verification link.");
+    // Check if user exists and token matches
+    if (!user) {
+      return res.status(404).send("User not found.");
+    } else if (user.verificationToken !== token) {
+      return res.status(400).send("Invalid or expired verification link.");
     }
+
+    // Mark the user as verified
+    user.verified = true;
+    res.send("Email successfully verified.");
   } catch (error) {
     console.log(error);
     res.status(500).send(error.message);
