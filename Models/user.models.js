@@ -44,8 +44,33 @@ const cartSchema = new mongoose.Schema(
   }
 );
 
+const forgotCodeSchema = new mongoose.Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+    },
+    userId: {
+      type: String,
+      required: true,
+    },
+    verificationToken: {
+      type: String,
+      required: true,
+    },
+    verified: {
+      type: Boolean,
+      default: false,
+    }
+  },
+  {
+    versionKey: false,
+  }
+);
+
 const Cart = mongoose.model("Cart", cartSchema);
 const Products = mongoose.model("products", productSchema);
 const User = mongoose.model("User", userSchema);
+const ForgotCode = mongoose.model("forgotCode", forgotCodeSchema);
 
-module.exports = { User, Products, Cart };
+module.exports = { User, Products, Cart, ForgotCode };

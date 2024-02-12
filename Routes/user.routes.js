@@ -1,11 +1,12 @@
 const express = require("express");
 const userRouter = express.Router();
-const { User } = require("../Models/user.models");
+const { User, ForgotCode } = require("../Models/user.models");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
 const nodemailer = require("nodemailer");
 const uuid = require("uuid");
+const { number } = require("yup");
 require("dotenv").config();
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -16,7 +17,6 @@ const transporter = nodemailer.createTransport({
 });
 
 // Dummy database
-let users = {};
 
 // Registration route
 userRouter.post("/register-email", async (req, res) => {
@@ -27,10 +27,12 @@ userRouter.post("/register-email", async (req, res) => {
     const verificationToken = Math.floor(100000 + Math.random() * 900000); // Generate unique verification token
 
     // Store user with verification token and not verified status
-    users[userId] = { email, verificationToken, verified: false };
-
-    // Email verification link
-    const verificationLink = `${req.url}/user/verify-email?token=${verificationToken}&userId=${userId}`;
+    const user = new ForgotCode({
+      email,
+      userId,
+      verificationToken,
+      verified: false,
+    });
 
     const mailOptions = {
       from: "subhamsana700@gmail.com",
@@ -50,6 +52,7 @@ userRouter.post("/register-email", async (req, res) => {
           .send("Registration successful, please verify your email.");
       }
     });
+    await user.save();
   } catch (error) {
     console.log(error);
     res.status(500).send(error.message);
@@ -66,18 +69,16 @@ userRouter.post("/verify-email", async (req, res) => {
       return res.status(400).send("Missing token or user ID.");
     }
 
-    const user = users[userId];
-    console.log(users);
+    const user = await ForgotCode.findOne({ userId });
 
     // Check if user exists and token matches
     if (!user) {
       return res.status(404).send("User not found.");
-    } else if (user.verificationToken !== token) {
+    } else if (Number(user.verificationToken) !== token) {
       return res.status(400).send("Invalid or expired verification link.");
     }
 
     // Mark the user as verified
-    user.verified = true;
     res.status(200).send("Email successfully verified.");
   } catch (error) {
     console.log(error);
