@@ -12,7 +12,7 @@ const cartRouter = require("./Routes/Cart.routes");
 app.use(express.json());
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://costco-com-i4c5.vercel.app","https://costco-clone-eight.vercel.app/"],
+    origin: ["http://localhost:3000", "https://costco-com-i4c5.vercel.app","https://costco-clone-eight.vercel.app"],
     credentials: true,
   })
 );
